@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <cmath>
+#include <vector>
+#include <limits.h>
 
 void ignore_line()
 {
@@ -11,6 +13,7 @@ void ignore_line()
 }
 
 int get_num(const int lower_lim)
+// Get user inputted int
 {
     while (true) // Loop until user enters a valid input
     {
@@ -30,7 +33,8 @@ int get_num(const int lower_lim)
     }
 }
 
-int get_length(const int base, const int num) // Returns the size of array needed to store the number
+int get_length(const int base, const int num)
+// Returns the size of array needed to store the number
 {
     if (num < 0 || base < 2)
     {
@@ -48,52 +52,41 @@ int get_length(const int base, const int num) // Returns the size of array neede
     }
 }
 
-int* in_numeral_system(const int base, const int num)
+void convert(const int base, const int num, std::vector<int>& array)
+// New_num in base is equivalent to num in base 10
 {
-    static int count{ 0 }; // Count (length-num_of_recursions)
-    static int length{ get_length(base, num) };
-    static int* array{ new int[length] {} }; // Store result
-
     if (num < base)
     {
-        array[0] = num; // Count zero here
-        return array;
+        array.push_back(num); // Count zero here
+        return;
     }
     else
     {
-        in_numeral_system(base, num / base);
-        ++count;
-        array[count] = num % base;
-        return array;
-    }
-}
-
-void print_array(const int *array, const int length)
-{
-    if (!array) return; // End function if passed null pointer
-
-    for (int i{ 0 }; i < length; ++i)
-    {
-        std::cout << array[i] << ' ';
+        convert(base, num / base, array);
+        array.push_back(num % base);
+        return;
     }
 }
 
 int main()
 {
     std::cout << "Enter a number greater than 1 to be the radix (base): ";
-    int base{ get_num(2) };
+    int base{ get_num(2) }; // Number must be >=2
     std::cout << "Enter a non-negative integer: ";
-    int num{ get_num(0) };
+    int num{ get_num(0) }; // Number must be >=0
 
     int length{ get_length(base, num) }; // Length of array needed to store new number
     std::cout << "Length of array needed to store value: " << length << '\n';
     
-    int* array{ in_numeral_system(base, num) };
-    std::cout << num << " in base " << base << " is ";
-    print_array(array, length); // array evaluates to a pointer
+    std::vector<int> new_num{}; // Initialise a vector for our new number
+    convert(base, num, new_num); // Convert num into new base
 
+    std::cout << num << " in base " << base << " is ";
+    for (int element : new_num)
+    {
+        std::cout << element << ' ';
+    }
     std::cout << '\n';
-    delete[] array; // De-allocate array
 
     return 0;
 }
