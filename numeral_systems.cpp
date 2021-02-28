@@ -72,21 +72,37 @@ int main()
 {
     std::cout << "Enter a number greater than 1 to be the radix (base): ";
     int base{ get_num(2) }; // Number must be >=2
-    std::cout << "Enter a non-negative integer: ";
-    int num{ get_num(0) }; // Number must be >=0
 
+    std::cout << "To end, enter -1\n";
+
+    while (true)
+    {
+        std::cout << "Enter a non-negative integer: ";
+        int num{ get_num(-1) }; // Number must be >=0, -1 used for break
+
+        if (num == -1)
+        {
+            std::cout << "---END---";
+            break; // End loop if -1 entered
+        }
+
+        std::vector<int> new_num{}; // Initialise a vector for our new number
+        convert(base, num, new_num); // Convert num into new base
+
+        for (int element : new_num)
+        {
+            std::cout << element << ' ';
+        }
+        std::cout << '\n';
+
+        new_num.clear();
+    }
+
+
+    /*
     int length{ get_length(base, num) }; // Length of array needed to store new number
     std::cout << "Length of array needed to store value: " << length << '\n';
-    
-    std::vector<int> new_num{}; // Initialise a vector for our new number
-    convert(base, num, new_num); // Convert num into new base
-
-    std::cout << num << " in base " << base << " is ";
-    for (int element : new_num)
-    {
-        std::cout << element << ' ';
-    }
-    std::cout << '\n';
+    */
 
     return 0;
 }
